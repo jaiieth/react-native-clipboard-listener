@@ -1,5 +1,5 @@
 {
-  "name": "clipboard-listener",
+  "name": "@varis.a/react-native-clipboard-listener",
   "version": "0.1.0",
   "description": "Expo module used for listening to clipboard change events",
   "main": "build/index.js",
