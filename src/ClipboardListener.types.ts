@@ -1,7 +1,6 @@
-import type { StyleProp, ViewStyle } from 'react-native';
 
 export type OnLoadEventPayload = {
-  url: string;
+  value: string;
 };
 
 export type ClipboardListenerModuleEvents = {
@@ -10,10 +9,4 @@ export type ClipboardListenerModuleEvents = {
 
 export type ChangeEventPayload = {
   value: string;
-};
-
-export type ClipboardListenerViewProps = {
-  url: string;
-  onLoad: (event: { nativeEvent: OnLoadEventPayload }) => void;
-  style?: StyleProp<ViewStyle>;
 };

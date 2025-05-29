@@ -10,39 +10,37 @@ public class ClipboardListenerModule: Module {
     // The module will be accessible from `requireNativeModule('ClipboardListener')` in JavaScript.
     Name("ClipboardListener")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants([
-      "PI": Double.pi
-    ])
-
     // Defines event names that the module can send to JavaScript.
     Events("onChange")
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      return "Hello world! 👋"
-    }
-
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { (value: String) in
-      // Send an event to JavaScript.
-      self.sendEvent("onChange", [
-        "value": value
-      ])
-    }
-
-    // Enables the module to be used as a native view. Definition components that are accepted as part of the
-    // view definition: Prop, Events.
-    View(ClipboardListenerView.self) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { (view: ClipboardListenerView, url: URL) in
-        if view.webView.url != url {
-          view.webView.load(URLRequest(url: url))
-        }
+    //Registers a notification observer for clipboard changes.
+    OnStartObserving {
+      NotificationCenter.default.addObserver(
+        forName: UIPasteboard.changedNotification,
+        object: nil,
+        queue: nil
+      ) { _ in
+        self.sendEvent("onChange", ["value": UIPasteboard.general.string ?? ""])
       }
-
-      Events("onLoad")
     }
+
+    // Removes the observer when no longer needed.
+    OnStopObserving {
+      NotificationCenter.default.removeObserver(
+        self, name: UIPasteboard.changedNotification, object: nil)
+    }
+
+    // Sets the clipboard value.
+    Function("setString") { (value: String?) in
+      if value != nil {
+        UIPasteboard.general.string = value
+      }
+    }
+
+
+    Function("getString") { () -> String in
+      return UIPasteboard.general.string ?? ""
+    }
+
   }
 }

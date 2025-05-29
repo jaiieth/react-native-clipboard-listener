@@ -1,37 +1,44 @@
-import { useEvent } from 'expo';
-import ClipboardListener, { ClipboardListenerView } from 'clipboard-listener';
-import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { useEvent } from "expo";
+import ClipboardListener from "clipboard-listener";
+import {
+  Alert,
+  Button,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { useEffect, useState } from "react";
 
 export default function App() {
-  const onChangePayload = useEvent(ClipboardListener, 'onChange');
+  const clipboard = useEvent(ClipboardListener, "onChange");
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    console.log("clipboard", clipboard);
+  }, [clipboard]);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
-        <Text style={styles.header}>Module API Example</Text>
-        <Group name="Constants">
-          <Text>{ClipboardListener.PI}</Text>
-        </Group>
-        <Group name="Functions">
-          <Text>{ClipboardListener.hello()}</Text>
-        </Group>
-        <Group name="Async functions">
+        <Text style={styles.header}>Clipboard Module Example</Text>
+        <Group name="Clipboard">
+          <TextInput
+            placeholder="Enter text to copy"
+            value={value}
+            onChangeText={setValue}
+            style={styles.input}
+          />
           <Button
-            title="Set value"
+            title="Copy"
             onPress={async () => {
-              await ClipboardListener.setValueAsync('Hello from JS!');
+              ClipboardListener.setString(value);
             }}
           />
         </Group>
-        <Group name="Events">
-          <Text>{onChangePayload?.value}</Text>
-        </Group>
-        <Group name="Views">
-          <ClipboardListenerView
-            url="https://www.example.com"
-            onLoad={({ nativeEvent: { url } }) => console.log(`Loaded: ${url}`)}
-            style={styles.view}
-          />
+        <Group name="Clipboard Value">
+          <Text style={styles.clipboardValue}>{clipboard?.value}</Text>
         </Group>
       </ScrollView>
     </SafeAreaView>
@@ -58,16 +65,30 @@ const styles = {
   },
   group: {
     margin: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 20,
   },
   container: {
     flex: 1,
-    backgroundColor: '#eee',
+    backgroundColor: "#eee",
   },
   view: {
     flex: 1,
     height: 200,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  clipboardValue: {
+    marginBottom: 10,
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    color: "#5599ff", 
   },
 };
