@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "clipboard-listener": ["../src/index"],
+      "clipboard-listener/*": ["../src/*"]
+    }
+  }
+}
