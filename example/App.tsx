@@ -1,7 +1,6 @@
 import { useEvent } from "expo";
 import ClipboardListener from "clipboard-listener";
 import {
-  Alert,
   Button,
   SafeAreaView,
   ScrollView,
